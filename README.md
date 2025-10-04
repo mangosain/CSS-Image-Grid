@@ -5,6 +5,8 @@ This project demonstrates how to create a clean, flexible image gallery using mo
 
 Perfect for beginners, open-source enthusiasts, and Hacktoberfest contributors 🎉.  
 
+### NOTE: Make sure to add your profile details to contributors.json in [Quiver 2025](https://github.com/noodles-sed/hacktober-base)
+
 ---
 
 ## ✨ Features
