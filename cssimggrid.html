@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Image Grid</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Responsive Image Grid with Dark/Light Mode</title>
   <style>
+    /* ---------- Base Reset ---------- */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -12,30 +13,75 @@
     }
 
     body {
-      font-family: Arial, sans-serif;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #dce8ff, #fef6ff);
+      color: #333;
       padding: 20px;
-      background-color: #f8f9fa;
+      transition: background 0.5s, color 0.5s;
+    }
+
+    /* ---------- Dark Mode ---------- */
+    body.dark-mode {
+      background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
+      color: #f0f0f0;
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 20px;
-      color: #333;
+      margin-bottom: 25px;
+      font-size: 2rem;
+      letter-spacing: 1px;
     }
 
+    /* ---------- Toggle Button ---------- */
+    .toggle-btn {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .toggle-btn button {
+      background: #333;
+      color: #fff;
+      border: none;
+      border-radius: 25px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.3s, color 0.3s;
+    }
+
+    body.dark-mode .toggle-btn button {
+      background: #f0f0f0;
+      color: #111;
+    }
+
+    .toggle-btn button:hover {
+      opacity: 0.8;
+    }
+
+    /* ---------- Image Grid ---------- */
     .grid-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 15px;
+      grid-template-columns: repeat(auto-fill, minmax(clamp(180px, 30%, 300px), 1fr));
+      gap: 18px;
+      justify-content: center;
+      align-items: stretch;
     }
 
     .grid-item {
       position: relative;
       overflow: hidden;
-      border-radius: 10px;
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
+      background: #fff;
+    }
+
+    body.dark-mode .grid-item {
+      background: #2e2e2e;
+      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.08);
     }
 
     .grid-item img {
@@ -43,7 +89,8 @@
       height: 100%;
       object-fit: cover;
       display: block;
-      transition: transform 0.3s;
+      transition: transform 0.3s ease;
+      border-radius: 15px;
     }
 
     .grid-item:hover img {
@@ -51,30 +98,118 @@
     }
 
     .grid-item:hover {
-      box-shadow: 0 8px 12px rgba(0,0,0,0.2);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
     }
 
+    /* ---------- Overlay Caption ---------- */
+    .caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .grid-item:hover .caption {
+      opacity: 1;
+    }
+
+    /* ---------- Mobile Caption Below ---------- */
     @media (max-width: 600px) {
-      .grid-container {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      .caption {
+        position: static;
+        background: none;
+        color: inherit;
+        opacity: 1;
+        padding-top: 8px;
+        font-weight: 500;
+      }
+
+      .grid-item:hover img {
+        transform: none;
+      }
+    }
+
+    /* ---------- Animation ---------- */
+    .grid-item {
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
   </style>
 </head>
 <body>
-
   <h1>Responsive Image Grid</h1>
 
-  <div class="grid-container">
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=1" alt="Random Image 1"></div>
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=2" alt="Random Image 2"></div>
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=3" alt="Random Image 3"></div>
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=4" alt="Random Image 4"></div>
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=5" alt="Random Image 5"></div>
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=6" alt="Random Image 6"></div>
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=7" alt="Random Image 7"></div>
-    <div class="grid-item"><img src="https://picsum.photos/300/200?random=8" alt="Random Image 8"></div>
+  <div class="toggle-btn">
+    <button id="modeToggle">🌞 Light / Dark 🌙</button>
   </div>
 
+  <div class="grid-container">
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=1" alt="Nature">
+      <div class="caption">Calm Forest</div>
+    </div>
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=2" alt="City">
+      <div class="caption">City Lights</div>
+    </div>
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=3" alt="Mountains">
+      <div class="caption">Mountain Peaks</div>
+    </div>
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=4" alt="Beach">
+      <div class="caption">Sunny Beach</div>
+    </div>
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=5" alt="Desert">
+      <div class="caption">Golden Desert</div>
+    </div>
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=6" alt="Lake">
+      <div class="caption">Serene Lake</div>
+    </div>
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=7" alt="Snow">
+      <div class="caption">Snowy Path</div>
+    </div>
+    <div class="grid-item">
+      <img src="https://picsum.photos/400/300?random=8" alt="Garden">
+      <div class="caption">Colorful Garden</div>
+    </div>
+  </div>
+
+  <script>
+    // Dark/Light Mode Toggle
+    const toggleBtn = document.getElementById("modeToggle");
+    const body = document.body;
+
+    // Load saved mode from localStorage
+    if (localStorage.getItem("theme") === "dark") {
+      body.classList.add("dark-mode");
+    }
+
+    toggleBtn.addEventListener("click", () => {
+      body.classList.toggle("dark-mode");
+      const currentTheme = body.classList.contains("dark-mode") ? "dark" : "light";
+      localStorage.setItem("theme", currentTheme);
+    });
+  </script>
 </body>
 </html>
