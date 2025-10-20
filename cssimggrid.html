@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="A responsive image grid gallery with dark/light mode toggle and smooth animations">
+  <meta name="keywords" content="CSS Grid, Image Gallery, Responsive Design, Dark Mode">
   <title>Responsive Image Grid with Dark/Light Mode</title>
   <style>
     /* ---------- Base Reset ---------- */
@@ -10,6 +12,11 @@
       box-sizing: border-box;
       margin: 0;
       padding: 0;
+    }
+    
+    /* Smooth scrolling */
+    html {
+      scroll-behavior: smooth;
     }
 
     body {
@@ -49,6 +56,12 @@
       cursor: pointer;
       font-weight: 600;
       transition: background 0.3s, color 0.3s;
+      font-size: 0.95rem;
+    }
+    
+    .toggle-btn button:focus {
+      outline: 2px solid #666;
+      outline-offset: 3px;
     }
 
     body.dark-mode .toggle-btn button {
@@ -77,6 +90,11 @@
       cursor: pointer;
       transition: transform 0.3s, box-shadow 0.3s;
       background: #fff;
+    }
+    
+    .grid-item:focus {
+      outline: 3px solid #4a90e2;
+      outline-offset: 4px;
     }
 
     body.dark-mode .grid-item {
@@ -157,40 +175,40 @@
   <h1>Responsive Image Grid</h1>
 
   <div class="toggle-btn">
-    <button id="modeToggle">🌞 Light / Dark 🌙</button>
+    <button id="modeToggle" aria-label="Toggle dark and light mode">🌞 Light / Dark 🌙</button>
   </div>
 
-  <div class="grid-container">
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=1" alt="Nature">
+  <div class="grid-container" role="list" aria-label="Image gallery">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=1" alt="Beautiful calm forest with tall trees and greenery" loading="lazy">
       <div class="caption">Calm Forest</div>
     </div>
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=2" alt="City">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=2" alt="City skyline illuminated with bright lights at night" loading="lazy">
       <div class="caption">City Lights</div>
     </div>
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=3" alt="Mountains">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=3" alt="Majestic mountain peaks covered with snow" loading="lazy">
       <div class="caption">Mountain Peaks</div>
     </div>
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=4" alt="Beach">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=4" alt="Sunny beach with clear blue water and golden sand" loading="lazy">
       <div class="caption">Sunny Beach</div>
     </div>
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=5" alt="Desert">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=5" alt="Golden desert landscape with rolling sand dunes" loading="lazy">
       <div class="caption">Golden Desert</div>
     </div>
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=6" alt="Lake">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=6" alt="Serene lake surrounded by peaceful nature" loading="lazy">
       <div class="caption">Serene Lake</div>
     </div>
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=7" alt="Snow">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=7" alt="Snowy path through a winter wonderland" loading="lazy">
       <div class="caption">Snowy Path</div>
     </div>
-    <div class="grid-item">
-      <img src="https://picsum.photos/400/300?random=8" alt="Garden">
+    <div class="grid-item" tabindex="0" role="listitem">
+      <img src="https://picsum.photos/400/300?random=8" alt="Colorful garden filled with vibrant flowers" loading="lazy">
       <div class="caption">Colorful Garden</div>
     </div>
   </div>
@@ -209,6 +227,17 @@
       body.classList.toggle("dark-mode");
       const currentTheme = body.classList.contains("dark-mode") ? "dark" : "light";
       localStorage.setItem("theme", currentTheme);
+    });
+    
+    // Keyboard navigation for grid items
+    const gridItems = document.querySelectorAll('.grid-item');
+    gridItems.forEach(item => {
+      item.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          item.click();
+        }
+      });
     });
   </script>
 </body>
