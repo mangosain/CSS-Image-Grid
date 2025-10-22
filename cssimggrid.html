@@ -3,242 +3,568 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="A responsive image grid gallery with dark/light mode toggle and smooth animations">
-  <meta name="keywords" content="CSS Grid, Image Gallery, Responsive Design, Dark Mode">
-  <title>Responsive Image Grid with Dark/Light Mode</title>
+  <meta name="description" content="A stunning responsive image grid gallery with modern design, dark/light mode toggle, parallax, spring animations, and an interactive lightbox.">
+  <meta name="keywords" content="CSS Grid, Image Gallery, Responsive Design, Dark Mode, Modern UI, Interactive, Parallax, GSAP, Lightbox, Spring Animation">
+  <title>Super Interactive Image Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/CustomEase.min.js"></script>
   <style>
-    /* ---------- Base Reset ---------- */
+    /* ---------- Root Variables and Base Reset ---------- */
+    :root {
+      /* Light Mode Palette */
+      --color-primary: #5c67f2; /* Vibrant Blue */
+      --color-primary-light: #8e99f3;
+      --color-secondary: #f0f4f8; /* Light Background */
+      --color-bg-gradient-start: #e0e7ff;
+      --color-bg-gradient-end: #f5f7fa;
+      --color-text: #2c3e50; /* Dark Text */
+      --color-card-bg: #ffffff;
+      --color-shadow: rgba(0, 0, 0, 0.1);
+      --color-shadow-hover: rgba(0, 0, 0, 0.2);
+      
+      /* Dark Mode Palette */
+      --dark-primary: #8494ff;
+      --dark-primary-light: #aab4ff;
+      --dark-secondary: #1e1e2f;
+      --dark-bg-gradient-start: #1a1a2e;
+      --dark-bg-gradient-end: #2c2c40;
+      --dark-text: #ecf0f1;
+      --dark-card-bg: #2c2c40;
+      --dark-shadow: rgba(255, 255, 255, 0.08);
+      --dark-shadow-hover: rgba(255, 255, 255, 0.15);
+
+      --border-radius-lg: 18px;
+      --transition-speed: 0.4s;
+      --spring-ease: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --bounce-ease: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
     
-    /* Smooth scrolling */
     html {
       scroll-behavior: smooth;
     }
 
     body {
-      font-family: "Poppins", sans-serif;
-      background: linear-gradient(135deg, #dce8ff, #fef6ff);
-      color: #333;
-      padding: 20px;
-      transition: background 0.5s, color 0.5s;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(135deg, var(--color-bg-gradient-start), var(--color-bg-gradient-end));
+      color: var(--color-text);
+      padding: 30px 20px;
+      min-height: 100vh;
+      transition: background var(--transition-speed), color var(--transition-speed);
+      line-height: 1.6;
+      overflow-x: hidden;
     }
 
-    /* ---------- Dark Mode ---------- */
+    /* ---------- Dark Mode Styling ---------- */
     body.dark-mode {
-      background: linear-gradient(135deg, #1e1e1e, #2c2c2c);
-      color: #f0f0f0;
+      background: linear-gradient(135deg, var(--dark-bg-gradient-start), var(--dark-bg-gradient-end));
+      color: var(--dark-text);
     }
 
     h1 {
       text-align: center;
-      margin-bottom: 25px;
-      font-size: 2rem;
-      letter-spacing: 1px;
+      margin-bottom: 40px;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      font-weight: 700;
+      color: var(--color-primary);
+      transition: color var(--transition-speed);
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    body.dark-mode h1 {
+      color: var(--dark-primary);
+      text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
-    /* ---------- Toggle Button ---------- */
+    /* --- Toggle Button --- */
     .toggle-btn {
       display: flex;
       justify-content: center;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
-    .toggle-btn button {
-      background: #333;
+    #modeToggle {
+      background: var(--color-primary);
       color: #fff;
       border: none;
-      border-radius: 25px;
-      padding: 10px 20px;
+      border-radius: 50px;
+      padding: 12px 25px;
       cursor: pointer;
       font-weight: 600;
-      transition: background 0.3s, color 0.3s;
-      font-size: 0.95rem;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: background var(--transition-speed), box-shadow 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
     
-    .toggle-btn button:focus {
-      outline: 2px solid #666;
-      outline-offset: 3px;
+    #modeToggle:focus {
+      outline: 3px solid var(--color-primary-light);
+      outline-offset: 4px;
+      box-shadow: 0 0 0 6px rgba(92, 103, 242, 0.3);
     }
 
-    body.dark-mode .toggle-btn button {
-      background: #f0f0f0;
-      color: #111;
+    body.dark-mode #modeToggle {
+      background: var(--dark-primary);
+      color: var(--dark-secondary);
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    }
+    
+    body.dark-mode #modeToggle:focus {
+      outline: 3px solid var(--dark-primary-light);
+      box-shadow: 0 0 0 6px rgba(132, 148, 255, 0.3);
     }
 
-    .toggle-btn button:hover {
-      opacity: 0.8;
+    #modeToggle .icon {
+        font-size: 1.2em;
+        line-height: 1;
+        transform-origin: center;
     }
 
-    /* ---------- Image Grid ---------- */
+    /* --- Image Grid --- */
     .grid-container {
+      max-width: 1200px;
+      margin: 0 auto;
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(clamp(180px, 30%, 300px), 1fr));
-      gap: 18px;
-      justify-content: center;
-      align-items: stretch;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+      gap: 25px;
     }
 
     .grid-item {
       position: relative;
       overflow: hidden;
-      border-radius: 15px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      border-radius: var(--border-radius-lg);
+      box-shadow: 0 8px 20px var(--color-shadow);
       cursor: pointer;
-      transition: transform 0.3s, box-shadow 0.3s;
-      background: #fff;
+      transition: background var(--transition-speed), box-shadow 0.4s ease-out;
+      background: var(--color-card-bg);
+      will-change: transform, box-shadow;
+      transform-origin: center;
     }
     
     .grid-item:focus {
-      outline: 3px solid #4a90e2;
+      outline: 4px solid var(--color-primary-light);
       outline-offset: 4px;
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
     }
 
     body.dark-mode .grid-item {
-      background: #2e2e2e;
-      box-shadow: 0 4px 8px rgba(255, 255, 255, 0.08);
+      background: var(--dark-card-bg);
+      box-shadow: 0 8px 20px var(--dark-shadow);
     }
 
     .grid-item img {
       width: 100%;
       height: 100%;
+      aspect-ratio: 4/3;
       object-fit: cover;
       display: block;
+      border-radius: var(--border-radius-lg);
       transition: transform 0.3s ease;
-      border-radius: 15px;
     }
 
-    .grid-item:hover img {
-      transform: scale(1.1);
+    /* --- Overlay Caption (Not part of the fix, but kept for completeness) --- */
+    .caption-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        pointer-events: none;
     }
-
-    .grid-item:hover {
-      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
-    }
-
-    /* ---------- Overlay Caption ---------- */
+    
     .caption {
       position: absolute;
       bottom: 0;
       left: 0;
       right: 0;
-      background: rgba(0, 0, 0, 0.6);
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0));
       color: #fff;
-      padding: 10px;
-      text-align: center;
-      font-size: 0.9rem;
+      padding: 25px 15px 15px;
+      text-align: left;
+      font-size: 1.1rem;
+      font-weight: 600;
       opacity: 0;
-      transition: opacity 0.3s ease;
+      transform: translateY(100%);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      pointer-events: auto;
     }
 
     .grid-item:hover .caption {
       opacity: 1;
+      transform: translateY(0);
     }
+    
+    /* --- Mobile Caption Below (Not part of the fix, but kept for completeness) --- */
+    @media (max-width: 768px) {
+      .grid-item:hover {
+          transform: none !important;
+          box-shadow: 0 4px 15px var(--color-shadow);
+      }
+      body.dark-mode .grid-item:hover {
+          box-shadow: 0 4px 15px var(--dark-shadow);
+      }
 
-    /* ---------- Mobile Caption Below ---------- */
-    @media (max-width: 600px) {
+      .grid-item img {
+          border-bottom-left-radius: 0;
+          border-bottom-right-radius: 0;
+      }
+
       .caption {
         position: static;
-        background: none;
-        color: inherit;
+        background: var(--color-card-bg);
+        color: var(--color-text);
         opacity: 1;
-        padding-top: 8px;
-        font-weight: 500;
-      }
-
-      .grid-item:hover img {
-        transform: none;
-      }
-    }
-
-    /* ---------- Animation ---------- */
-    .grid-item {
-      animation: fadeIn 0.8s ease-in-out;
-    }
-
-    @keyframes fadeIn {
-      from {
-        opacity: 0;
-        transform: translateY(15px);
-      }
-      to {
-        opacity: 1;
+        padding: 12px 15px;
+        text-align: center;
+        font-size: 0.95rem;
+        font-weight: 600;
         transform: translateY(0);
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: var(--border-radius-lg);
+        border-bottom-right-radius: var(--border-radius-lg);
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
       }
+      
+      body.dark-mode .caption {
+          background: var(--dark-card-bg);
+          color: var(--dark-text);
+      }
+      
+      .grid-container {
+          gap: 15px;
+      }
+      
+      .caption-wrapper {
+          display: contents;
+      }
+    }
+    
+    /* CRITICAL FIX: Base state should not be invisible. GSAP will handle the animation. */
+    .grid-item {
+      /* Removed: opacity: 0; */
+      transform: translateY(0);
+    }
+
+    /* --- Lightbox Styles (Not part of the fix, but kept for completeness) --- */
+    .lightbox-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.85);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        padding: 20px;
+    }
+
+    .lightbox-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .lightbox-content {
+        max-width: 90%;
+        max-height: 90%;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        border-radius: var(--border-radius-lg);
+        overflow: hidden;
+        transform: scale(0.8);
+        transition: transform 0.3s var(--bounce-ease);
+        position: relative;
+    }
+    
+    .lightbox-overlay.active .lightbox-content {
+        transform: scale(1);
+    }
+
+    .lightbox-image {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        display: block;
+    }
+
+    .lightbox-close {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: rgba(255, 255, 255, 0.2);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: background 0.2s, transform 0.2s;
+        z-index: 1001;
+    }
+
+    .lightbox-close:hover {
+        background: rgba(255, 255, 255, 0.4);
+        transform: rotate(90deg);
+    }
+    
+    .lightbox-caption {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.6);
+        color: #fff;
+        padding: 15px;
+        font-size: 1.1rem;
+        text-align: center;
+        pointer-events: none;
     }
   </style>
 </head>
 <body>
-  <h1>Responsive Image Grid</h1>
+  <h1 id="galleryTitle">Super Interactive Image Gallery ✨</h1>
 
   <div class="toggle-btn">
-    <button id="modeToggle" aria-label="Toggle dark and light mode">🌞 Light / Dark 🌙</button>
+    <button id="modeToggle" aria-label="Toggle dark and light mode">
+      <span class="icon current-icon">🌞</span> <span class="text">Light / Dark</span> 
+    </button>
   </div>
 
-  <div class="grid-container" role="list" aria-label="Image gallery">
+  <div class="grid-container" role="list" aria-label="Modern image gallery">
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=1" alt="Beautiful calm forest with tall trees and greenery" loading="lazy">
-      <div class="caption">Calm Forest</div>
+      <img src="https://picsum.photos/400/300?random=1" data-full-src="https://picsum.photos/1200/900?random=1" alt="Beautiful calm forest with tall trees and greenery" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Calm Forest Retreat</div>
+      </div>
     </div>
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=2" alt="City skyline illuminated with bright lights at night" loading="lazy">
-      <div class="caption">City Lights</div>
+      <img src="https://picsum.photos/400/300?random=2" data-full-src="https://picsum.photos/1200/900?random=2" alt="City skyline illuminated with bright lights at night" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Dazzling City Lights</div>
+      </div>
     </div>
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=3" alt="Majestic mountain peaks covered with snow" loading="lazy">
-      <div class="caption">Mountain Peaks</div>
+      <img src="https://picsum.photos/400/300?random=3" data-full-src="https://picsum.photos/1200/900?random=3" alt="Majestic mountain peaks covered with snow" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Majestic Snow Peaks</div>
+      </div>
     </div>
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=4" alt="Sunny beach with clear blue water and golden sand" loading="lazy">
-      <div class="caption">Sunny Beach</div>
+      <img src="https://picsum.photos/400/300?random=4" data-full-src="https://picsum.photos/1200/900?random=4" alt="Sunny beach with clear blue water and golden sand" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Tropical Golden Beach</div>
+      </div>
     </div>
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=5" alt="Golden desert landscape with rolling sand dunes" loading="lazy">
-      <div class="caption">Golden Desert</div>
+      <img src="https://picsum.photos/400/300?random=5" data-full-src="https://picsum.photos/1200/900?random=5" alt="Golden desert landscape with rolling sand dunes" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Sahara Sand Dunes</div>
+      </div>
     </div>
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=6" alt="Serene lake surrounded by peaceful nature" loading="lazy">
-      <div class="caption">Serene Lake</div>
+      <img src="https://picsum.photos/400/300?random=6" data-full-src="https://picsum.photos/1200/900?random=6" alt="Serene lake surrounded by peaceful nature" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Reflective Serene Lake</div>
+      </div>
     </div>
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=7" alt="Snowy path through a winter wonderland" loading="lazy">
-      <div class="caption">Snowy Path</div>
+      <img src="https://picsum.photos/400/300?random=7" data-full-src="https://picsum.photos/1200/900?random=7" alt="Snowy path through a winter wonderland" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Winter Wonderland Path</div>
+      </div>
     </div>
     <div class="grid-item" tabindex="0" role="listitem">
-      <img src="https://picsum.photos/400/300?random=8" alt="Colorful garden filled with vibrant flowers" loading="lazy">
-      <div class="caption">Colorful Garden</div>
+      <img src="https://picsum.photos/400/300?random=8" data-full-src="https://picsum.photos/1200/900?random=8" alt="Colorful garden filled with vibrant flowers" loading="lazy">
+      <div class="caption-wrapper">
+        <div class="caption">Vibrant Flower Garden</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <div class="lightbox-content">
+      <img src="" alt="Zoomed in image" class="lightbox-image" id="lightboxImage">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+      <button class="lightbox-close" id="lightboxClose" aria-label="Close image"></button>
     </div>
   </div>
 
   <script>
-    // Dark/Light Mode Toggle
+    // Register GSAP ScrollTrigger plugin
+    gsap.registerPlugin(ScrollTrigger, CustomEase);
+
+    // Custom Spring Ease for bouncy effects
+    CustomEase.create("spring", "0.175, 0.885, 0.32, 1.275");
+    CustomEase.create("bounce", "0.68, -0.55, 0.265, 1.55");
+
+
+    // --- Dark/Light Mode Toggle Script ---
     const toggleBtn = document.getElementById("modeToggle");
     const body = document.body;
+    const currentIcon = toggleBtn.querySelector('.current-icon');
 
-    // Load saved mode from localStorage
-    if (localStorage.getItem("theme") === "dark") {
-      body.classList.add("dark-mode");
+    const savedTheme = localStorage.getItem("theme");
+    
+    function setTheme(theme) {
+      if (theme === "dark") {
+        body.classList.add("dark-mode");
+        currentIcon.textContent = '🌙';
+      } else {
+        body.classList.remove("dark-mode");
+        currentIcon.textContent = '🌞';
+      }
+      localStorage.setItem("theme", theme);
+    }
+
+    if (savedTheme) {
+      setTheme(savedTheme);
+    } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark');
+    } else {
+        setTheme('light');
     }
 
     toggleBtn.addEventListener("click", () => {
-      body.classList.toggle("dark-mode");
-      const currentTheme = body.classList.contains("dark-mode") ? "dark" : "light";
-      localStorage.setItem("theme", currentTheme);
+      const currentTheme = body.classList.contains("dark-mode") ? "light" : "dark";
+      setTheme(currentTheme);
+      
+      // Toggle button micro-interaction
+      gsap.fromTo(currentIcon, 
+        { scale: 0.5, rotate: -30 }, 
+        { scale: 1, rotate: 0, duration: 0.6, ease: "bounce" }
+      );
+      gsap.fromTo(toggleBtn, 
+        { scale: 1 }, 
+        { scale: 0.98, yoyo: true, repeat: 1, duration: 0.2, ease: "power1.out" }
+      );
     });
     
-    // Keyboard navigation for grid items
+    // --- GSAP Animations ---
+
+    // 1. Parallax Heading
+    gsap.to("#galleryTitle", {
+      yPercent: 20, // Moves 20% of its height
+      ease: "none",
+      scrollTrigger: {
+        trigger: "body",
+        start: "top top",
+        end: "bottom top",
+        scrub: 0.8, // Smoothly link animation to scroll
+      }
+    });
+
+    // 2. Staggered Grid Item Entry Animation
+    // We explicitly set the initial state in JS/GSAP, overriding the default CSS visibility
+    gsap.from(".grid-item", {
+      opacity: 0,
+      y: 50,
+      scale: 0.9,
+      ease: "power3.out",
+      stagger: 0.08, // Staggered delay for each item
+      duration: 0.8,
+      scrollTrigger: {
+        trigger: ".grid-container",
+        start: "top 85%", // Start animation when top of container is 85% in viewport
+      }
+    });
+
+    // 3. Grid Item Hover & Click Spring Animations
     const gridItems = document.querySelectorAll('.grid-item');
+
     gridItems.forEach(item => {
+      // Hover animation
+      item.addEventListener('mouseenter', () => {
+        if (window.innerWidth > 768) { // Only on larger screens
+            gsap.to(item, { 
+                y: -10, 
+                scale: 1.03, 
+                boxShadow: "0 15px 30px rgba(0,0,0,0.25)",
+                duration: 0.6, 
+                ease: "spring" 
+            });
+            gsap.to(item.querySelector('img'), { scale: 1.05, duration: 0.4, ease: "power2.out" });
+        }
+      });
+
+      item.addEventListener('mouseleave', () => {
+        if (window.innerWidth > 768) {
+            gsap.to(item, { 
+                y: 0, 
+                scale: 1, 
+                boxShadow: "0 8px 20px var(--color-shadow)", // Reset to light mode shadow
+                duration: 0.6, 
+                ease: "spring" 
+            });
+            gsap.to(item.querySelector('img'), { scale: 1, duration: 0.3, ease: "power2.out" });
+        }
+      });
+      
+      // Click / Keyboard activation for lightbox
+      item.addEventListener('click', () => openLightbox(item));
       item.addEventListener('keypress', (e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          item.click();
+          openLightbox(item);
         }
       });
     });
+
+    // --- Lightbox Functionality ---
+    const lightboxOverlay = document.getElementById('lightboxOverlay');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const lightboxClose = document.getElementById('lightboxClose');
+
+    function openLightbox(item) {
+        const imgSrc = item.querySelector('img').getAttribute('data-full-src') || item.querySelector('img').src;
+        const imgAlt = item.querySelector('img').alt;
+        const captionText = item.querySelector('.caption').textContent;
+
+        lightboxImage.src = imgSrc;
+        lightboxImage.alt = imgAlt;
+        lightboxCaption.textContent = captionText;
+        lightboxOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        lightboxClose.focus();
+    }
+
+    function closeLightbox() {
+        lightboxOverlay.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    lightboxClose.addEventListener('click', closeLightbox);
+    lightboxOverlay.addEventListener('click', (e) => {
+        if (e.target === lightboxOverlay) {
+            closeLightbox();
+        }
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && lightboxOverlay.classList.contains('active')) {
+            closeLightbox();
+        }
+    });
+
   </script>
 </body>
 </html>
