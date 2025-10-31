@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name-="description" content="A stunning responsive image grid gallery with modern design, dark/light mode toggle, parallax, spring animations, and an interactive lightbox.">
+  <meta name="keywords" content="CSS Grid, Image Gallery, Responsive Design, Dark Mode, Modern UI, Interactive, Parallax, GSAP, Lightbox, Spring Animation">
+  <title>Super Interactive Image Gallery</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="Gallery.css">
+  
+</head>
+<body>
+  <h1 id="galleryTitle">Super Interactive Image Gallery ✨</h1>
+
+  <div class="toggle-btn-container">
+    <button id="modeToggle" class="toggle-btn" aria-label="Toggle dark and light mode">
+      <span class="icon current-icon">🌞</span> <span class="text">Light / Dark</span> 
+    </button>
+  </div>
+
+  <main id="main-content">
+    
+    
+    <div id="main-gallery-view">
+        <div class="grid-container" role="list" aria-label="Image gallery categories">
+            
+            <div class="grid-item" tabindex="0" role="listitem" data-gallery-id="nature">
+                <img src="https://placehold.co/400x300/2ecc71/ffffff?text=Nature" data-full-src="https://placehold.co/1200x900/2ecc71/ffffff?text=Nature" alt="Beautiful calm forest with tall trees and greenery" loading="lazy">
+                <div class="caption-wrapper">
+                <div class="caption">Nature</div>
+                </div>
+            </div>
+            <div class="grid-item" tabindex="0" role="listitem" data-gallery-id="cityscape">
+                <img src="https://placehold.co/400x300/3498db/ffffff?text=Cityscapes" data-full-src="https://placehold.co/1200x900/3498db/ffffff?text=Cityscapes" alt="City skyline illuminated with bright lights at night" loading="lazy">
+                <div class="caption-wrapper">
+                <div class="caption">Cityscapes</div>
+                </div>
+            </div>
+            <div class="grid-item" tabindex="0" role="listitem" data-gallery-id="mountains">
+                <img src="https://placehold.co/400x300/9b59b6/ffffff?text=Mountains" data-full-src="https://placehold.co/1200x900/9b59b6/ffffff?text=Mountains" alt="Majestic mountain peaks covered with snow" loading="lazy">
+                <div class="caption-wrapper">
+                <div class="caption">Mountains</div>
+                </div>
+            </div>
+            <div class="grid-item" tabindex="0" role="listitem" data-gallery-id="beaches">
+                <img src="https://placehold.co/400x300/f1c40f/ffffff?text=Beaches" data-full-src="https://placehold.co/1200x900/f1c40f/ffffff?text=Beaches" alt="Sunny beach with clear blue water and golden sand" loading="lazy">
+                <div class="caption-wrapper">
+                <div class="caption">Beaches</div>
+                </div>
+            </div>
+            <div class="grid-item" tabindex="0" role="listitem" data-gallery-id="deserts">
+                <img src="https://placehold.co/400x300/e67e22/ffffff?text=Deserts" data-full-src="https://placehold.co/1200x900/e67e22/ffffff?text=Deserts" alt="Golden desert landscape with rolling sand dunes" loading="lazy">
+                <div class="caption-wrapper">
+                <div class="caption">Deserts</div>
+                </div>
+            </div>
+            <div class="grid-item" tabindex="0" role="listitem" data-gallery-id="wildlife">
+                <img src="https://placehold.co/400x300/e74c3c/ffffff?text=Wildlife" data-full-src="https://placehold.co/1200x900/e74c3c/ffffff?text=Wildlife" alt="A majestic lion in the wild" loading="lazy">
+                <div class="caption-wrapper">
+                <div class="caption">Wildlife</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="detail-gallery-view">
+        <div class="back-button-container">
+            <button id="back-button" aria-label="Go back to gallery categories">
+                <span class="icon">⬅️</span> <span class="text">Back to Galleries</span>
+            </button>
+        </div>
+        <div id="detail-grid-container" class="grid-container" role="list" aria-label="Image gallery">
+            
+        </div>
+    </div>
+
+  </main>
+
+
+  
+  <div class="lightbox-overlay" id="lightboxOverlay">
+    <div class="lightbox-content">
+      <img src="" alt="Zoomed in image" class="lightbox-image" id="lightboxImage">
+      <div class="lightbox-caption" id="lightboxCaption"></div>
+      <button class="lightbox-close" id="lightboxClose" aria-label="Close image"></button>
+    </div>
+  </div>
+
+ <script src="Gallery.js"></script>
+</body>
+</html>
+
